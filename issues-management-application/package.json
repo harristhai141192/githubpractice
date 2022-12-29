@@ -2,10 +2,10 @@
   "name": "issues-management-application",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "build": "node patchJestDom.js && %previous_build_commands%",
     "lint:fix": "pnpx eslint ./src --fix",
     "prepare": "cd .. && husky install issues-management-application/_",
     "storybook": "start-storybook -p 6006",
