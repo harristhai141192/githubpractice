@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node patchJestDom.js && %previous_build_commands%",
     "lint:fix": "pnpx eslint ./src --fix",
     "prepare": "cd .. && husky install issues-management-application/_",
     "storybook": "start-storybook -p 6006",
