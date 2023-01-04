@@ -1,7 +1,6 @@
 // Libraries
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import { Box, FormControl, Input, Textarea, Text, Image, Button } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
 import { MoonIcon } from '@chakra-ui/icons';
 
 // Components
@@ -10,13 +9,21 @@ import MarkdownBar from '@components/MarkdownBar';
 interface IProps {
   userImage?: string;
   imageAlt?: string;
-  handleOnSubmit: () => void;
-  handleOnClick?: () => void;
+  handleOnSubmit: (data: { title: string; body: string }) => void;
 }
 
-const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit, handleOnClick }) => {
-  const { register, handleSubmit } = useForm();
-
+const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit }) => {
+  const titleInputEl = useRef<HTMLInputElement | null>(null);
+  const descriptionInputEl = useRef<HTMLTextAreaElement | null>(null);
+  const handleOnClick = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (titleInputEl?.current?.value && descriptionInputEl?.current?.value) {
+      handleOnSubmit({
+        title: titleInputEl.current.value,
+        body: descriptionInputEl.current.value,
+      });
+    }
+  }, []);
   return (
     <Box display='flex' flexDirection='row' textAlign='left'>
       <Box w={{ sm: '15%', md: '70px' }} paddingRight='5px' display='flex' justifyContent='center'>
@@ -36,7 +43,7 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit, h
         borderRadius='7px'
         fontSize={{ sm: 'text.small', md: 'text.medium' }}
       >
-        <form onSubmit={handleSubmit(handleOnSubmit)}>
+        <form onSubmit={handleOnClick}>
           <FormControl>
             <Box
               bgColor='white'
@@ -49,7 +56,8 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit, h
               alignItems='center'
             >
               <Input
-                {...register('title')}
+                data-testid='testInputUseRef'
+                ref={titleInputEl}
                 id='title'
                 type='text'
                 placeholder='Title'
@@ -88,7 +96,7 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit, h
               alignItems='center'
             >
               <Textarea
-                {...register('body')}
+                ref={descriptionInputEl}
                 id='body'
                 w='97%'
                 margin='5px'
@@ -110,7 +118,7 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit, h
                     Styling with Markdown is not supported
                   </Text>
                 </Box>
-                <Button onClick={handleOnClick} variant='solid' type='submit'>
+                <Button variant='solid' type='submit'>
                   Submit
                 </Button>
               </Box>

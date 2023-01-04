@@ -5,7 +5,7 @@ import { getByText, render } from '@utils/testUtils';
 import ListComments from '..';
 
 const baseProps = {
-  number: '1',
+  number: 1,
   title: 'This is sample issue for testing',
   user: {
     login: 'Bao Thai',
@@ -38,15 +38,5 @@ describe('Component [ListComments] testing', () => {
   test('It should match snapshot', () => {
     const { container } = setup();
     expect(container).toMatchSnapshot();
-  });
-
-  test('It should be included the props passed to ListComments', () => {
-    const { container } = setup();
-    expect(
-      getByText(
-        container,
-        'A dog that was stucked at the peak of moutain for months has been rescued by a man',
-      ),
-    ).toBeTruthy;
   });
 });

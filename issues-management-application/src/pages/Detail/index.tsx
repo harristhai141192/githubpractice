@@ -1,7 +1,7 @@
 // Libraries
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { SunIcon, MoonIcon, ArrowLeftIcon } from '@chakra-ui/icons';
 
 // Components
 import InputCommentBox from '@components/InputCommentBox';
@@ -27,7 +27,7 @@ import LoadingSpinner from '@components/LoadingSpinner';
 // Stores
 import { useIssueContext } from '@stores/Issue/context';
 import { useCommentContext } from '@stores/Comment/context';
-import { IIssueStateProps } from '@stores/Issue/issueReducer';
+import { IssueState } from '@stores/Issue/issueReducer';
 
 // Utils
 import {
@@ -37,27 +37,32 @@ import {
   updateIssue,
   getIssue,
 } from '@utils/mainFeaturesUtils';
-import { ILockReason } from '@models/index';
+import { ILockReason, IssueModel } from '@models/index';
 
 // Constants
 import { STATUS_VARIANT } from '@constants/statusVariant';
 import { PAGE_ROUTES } from '@constants/routes';
 
 const IssueDetail = () => {
-  const [issueState, issueDispatch] = useIssueContext();
-  const [commentState, commentDispatch] = useCommentContext();
+  const navigate = useNavigate();
+  const { state: issueState, dispatch: issueDispatch } = useIssueContext();
+  const { state: commentState, dispatch: commentDispatch } = useCommentContext();
+
+  const params = useParams();
+  const currentID = params?.id || '';
+
   const toast = useToast();
-  const { byId, loading }: IIssueStateProps = issueState;
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isOpenLockModal, setIsOpenLockModal] = useState(false);
   const [isOpenUnlockModal, setIsOpenUnlockModal] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
-  const { register, handleSubmit } = useForm();
-  const navigate = useNavigate();
-  const getComments = commentState.comments;
-  const params = useParams();
-  const currentID = params.id;
+
+  const { byId, loading }: IssueState = issueState;
+
+  const inputEl = React.useRef<HTMLInputElement | null>(null);
+
+  const currentIssue: IssueModel = byId[currentID];
 
   // CANCEL INPUT EDITING ISSUE
   const handleCancelEdit = () => {
@@ -70,18 +75,23 @@ const IssueDetail = () => {
   };
 
   // SAVING ISSUE VALUE EDITED
-  const handleSaveIssue = async (title: string) => {
-    updateIssue(issueDispatch, currentID, title);
-    setIsEditing(false);
-    handleToastedEditSuccess(STATUS_VARIANT.SUCCESS, 'Successfully Edited');
-  };
+  const handleSaveIssue = React.useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+
+      if (inputEl?.current?.value) {
+        await updateIssue(issueDispatch, currentID, { title: inputEl.current.value });
+      }
+      setIsEditing(false);
+      handleToastedEditSuccess(STATUS_VARIANT.SUCCESS, 'Successfully Edited');
+    },
+    [inputEl],
+  );
 
   // RE-FETCH ISSUE AFTER ACTION LOCKED
   const handleRefetchIssue = useCallback(
     (isLocked: boolean, currentID?: string) => {
-      setTimeout(() => {
-        getIssue(issueDispatch, currentID);
-      }, 1000);
+      getIssue(issueDispatch, currentID);
     },
     [isLocked, currentID],
   );
@@ -99,7 +109,7 @@ const IssueDetail = () => {
   // HANDLE LOCK ISSUE FEATURE
   const handleLockIssue = (data: ILockReason) => {
     lockIssue(issueDispatch, currentID, {
-      active_lock_reason: data?.lockReason,
+      lockReason: data?.lockReason,
     });
     setIsOpenLockModal(false);
     setIsLocked((prev) => !prev);
@@ -136,6 +146,10 @@ const IssueDetail = () => {
     getCommentsById(commentDispatch, currentID);
   }, [isLocked, currentID]);
 
+  const handleBackTohome = () => {
+    navigate(`${PAGE_ROUTES.HOME}`);
+  };
+
   return (
     <Container padding='20px 0'>
       {isDeleting && (
@@ -170,12 +184,12 @@ const IssueDetail = () => {
             fontSize={{ sm: 'text.medium', md: 'text.large' }}
           >
             {isEditing ? (
-              <form onSubmit={handleSubmit(handleSaveIssue)}>
+              <form onSubmit={handleSaveIssue}>
                 <FormControl display='flex' flexDirection='row' alignItems='center'>
                   <Input
+                    ref={inputEl}
                     placeholder='Please enter new title'
-                    defaultValue={byId?.title}
-                    {...register('title')}
+                    defaultValue={currentIssue?.title}
                   />
                   <Box display='flex' flexDirection='row' alignContent='center' margin='10px'>
                     <Button
@@ -196,9 +210,9 @@ const IssueDetail = () => {
                 </FormControl>
               </form>
             ) : (
-              byId?.title
+              currentIssue?.title
             )}
-            {isEditing ? '' : `#${byId?.number}`}
+            {isEditing ? '' : `#${currentIssue?.number}`}
           </Heading>
           <Box
             display='flex'
@@ -208,28 +222,33 @@ const IssueDetail = () => {
             paddingBottom='15px'
             marginTop='10px'
           >
-            <Status isOpen={!byId?.locked}>{!byId?.locked ? <SunIcon /> : <MoonIcon />}</Status>
+            <Status isOpen={!currentIssue?.locked}>
+              {!currentIssue?.locked ? <SunIcon /> : <MoonIcon />}
+            </Status>
             <Text marginLeft='10px'>
-              <Text as='b'>{byId?.user?.login}&nbsp;</Text>
-              {!byId?.locked ? 'opened this issue on' : 'closed this issue on'}&nbsp;
-              {byId?.created_at?.split('T')[0]}
+              <Text as='b'>{currentIssue?.user?.login}&nbsp;</Text>
+              {!currentIssue?.locked ? 'opened this issue on' : 'closed this issue on'}&nbsp;
+              {currentIssue?.created_at?.split('T')[0]}
             </Text>
           </Box>
           <Box display='flex' flexDirection='row' justifyContent='space-between'>
             <Box w='65%'>
-              <ListComments issue={byId} comments={getComments} />
+              <ListComments issue={currentIssue} comments={commentState.comments} />
               <Box marginTop='20px'>
-                <InputCommentBox userImage={byId?.user?.avatar_url} />
+                <InputCommentBox userImage={currentIssue?.user?.avatar_url} />
               </Box>
             </Box>
             <Box w='30%'>
               <DiscussionSideBar
-                isLock={byId?.locked}
+                isLock={currentIssue?.locked}
                 onLockIssue={handleOpenLockIssueModal}
                 onEditIssue={handleOnEditIssue}
                 onDeleteIssue={handleOpenDeleteModal}
                 onUnLockIssue={handleOpenUnlockIssueModal}
               />
+              <Button variant='ghost' leftIcon={<ArrowLeftIcon />} onClick={handleBackTohome}>
+                Back to home
+              </Button>
             </Box>
           </Box>
         </Box>
