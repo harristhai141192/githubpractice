@@ -2,7 +2,6 @@
   "name": "issues-management-application",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "lint:fix": "pnpx eslint ./src --fix",
@@ -31,8 +30,7 @@
     "@storybook/builder-vite": "^0.2.5",
     "@storybook/react": "^6.5.14",
     "@storybook/testing-library": "^0.0.13",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@types/node": "^18.11.18",
+    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.2.2",
     "@types/react": "^18.0.24",
