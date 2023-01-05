@@ -33,12 +33,18 @@ const CommentDescription: React.FC<IProps> = ({
         display='flex'
         flexDirection='row'
       >
-        <Text as='b'>{userName}</Text>
-        <Text margin='0' color='textDescriptionColor'>
+        <Text as='b' fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}>
+          {userName}
+        </Text>
+        <Text
+          margin='0'
+          color='textDescriptionColor'
+          fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+        >
           &nbsp; commented on {userCommentTime}
         </Text>
       </Box>
-      <Box padding='10px 15px' fontSize={{ sm: 'text.small', md: 'text.medium' }}>
+      <Box padding='10px 15px' fontSize={{ sm: 'text.mSmall', md: 'text.small' }}>
         {userComment}
       </Box>
     </CommentBox>

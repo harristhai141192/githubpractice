@@ -32,16 +32,22 @@ export const Button = {
 
   variants: {
     solid: {
-      width: { base: widths.extraSmall, md: widths.extraSmall, lg: widths.extraSmall },
+      width: {
+        base: widths.extraSmall,
+        sm: widths.superSmall,
+        md: widths.extraSmall,
+        lg: widths.extraSmall,
+      },
       letterSpacing: '1.2px',
       height: '30px',
-      borderRadius: '10px',
+      borderRadius: { sm: '3px', md: '10px' },
       border: '1px solid grey',
       bg: colors.buttonSuccess,
       color: 'white',
       _hover: { bg: 'lightgrey', color: 'black' },
+      padding: { sm: '10px' },
       fontSize: {
-        sm: fontSizes.text.small,
+        sm: fontSizes.text.extraSmall,
         md: fontSizes.text.small,
         lg: fontSizes.text.small,
       },

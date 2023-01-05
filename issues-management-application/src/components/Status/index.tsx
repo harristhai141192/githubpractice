@@ -11,11 +11,11 @@ const Status: React.FC<IProps> = ({ isOpen = false, children }) => {
   return (
     <Box
       bgColor={isOpen ? 'statusColor.green' : 'statusColor.purple'}
-      padding='5px 0px'
+      padding={{ sm: '2px', md: '5px 0px' }}
       borderRadius='55px'
-      fontSize='text.small'
+      fontSize={{ sm: 'text.mSmall', md: 'text.small' }}
       color='white'
-      width='100px'
+      width={{ sm: '70px', md: '100px' }}
       display='flex'
       flexDirection='row'
       alignItems='center'

@@ -25,7 +25,11 @@ const SideBar: React.FC<IProps> = ({ children, data }) => {
       {data &&
         data.map((item) => {
           return (
-            <Box borderBottom='1px solid lightgrey' key={generateKey()}>
+            <Box
+              borderBottom='1px solid lightgrey'
+              key={generateKey()}
+              fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+            >
               <Box
                 display='flex'
                 flexDirection='row'

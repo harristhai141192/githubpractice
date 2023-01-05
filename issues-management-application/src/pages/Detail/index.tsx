@@ -225,7 +225,7 @@ const IssueDetail = () => {
             <Status isOpen={!currentIssue?.locked}>
               {!currentIssue?.locked ? <SunIcon /> : <MoonIcon />}
             </Status>
-            <Text marginLeft='10px'>
+            <Text marginLeft='10px' fontSize={{ sm: 'text.mSmall', md: 'text.small' }}>
               <Text as='b'>{currentIssue?.user?.login}&nbsp;</Text>
               {!currentIssue?.locked ? 'opened this issue on' : 'closed this issue on'}&nbsp;
               {currentIssue?.created_at?.split('T')[0]}
@@ -246,7 +246,12 @@ const IssueDetail = () => {
                 onDeleteIssue={handleOpenDeleteModal}
                 onUnLockIssue={handleOpenUnlockIssueModal}
               />
-              <Button variant='ghost' leftIcon={<ArrowLeftIcon />} onClick={handleBackTohome}>
+              <Button
+                variant='ghost'
+                fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+                leftIcon={<ArrowLeftIcon />}
+                onClick={handleBackTohome}
+              >
                 Back to home
               </Button>
             </Box>

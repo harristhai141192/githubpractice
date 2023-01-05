@@ -67,6 +67,7 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit })
                 size='sm'
                 margin='5px'
                 border='1px solid lightGrey !important'
+                fontSize={{ sm: 'text.mSmall', md: 'text.small' }}
               />
             </Box>
             <Box
@@ -83,7 +84,7 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit })
                 flexDirection='row'
                 fontSize='text.large'
                 w='40%'
-                justifyContent='space-evenly'
+                justifyContent='flex-end'
               >
                 <MarkdownBar />
               </Box>
@@ -104,10 +105,11 @@ const CreatedIssue: React.FC<IProps> = ({ userImage, imageAlt, handleOnSubmit })
                 bgColor='mainBackground'
                 border='1px solid lightGrey !important'
                 h='300px'
+                fontSize={{ sm: 'text.mSmall', md: 'text.small' }}
               />
               <Box
                 display='flex'
-                flexDirection={{ sm: 'column', md: 'row' }}
+                flexDirection='row'
                 justifyContent='space-between'
                 padding='15px'
                 w='100%'

@@ -30,18 +30,38 @@ const DiscussionSideBar: React.FC<IProps> = ({
       <SideBar>
         <Box w={{ sm: '150px', md: '250px' }} display='flex' flexDirection='column'>
           {!isLock ? (
-            <Button variant='link' leftIcon={<LockIcon />} onClick={onLockIssue}>
+            <Button
+              variant='link'
+              fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+              leftIcon={<LockIcon />}
+              onClick={onLockIssue}
+            >
               Lock conversation
             </Button>
           ) : (
-            <Button variant='link' leftIcon={<UnlockIcon />} onClick={onUnLockIssue}>
+            <Button
+              fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+              variant='link'
+              leftIcon={<UnlockIcon />}
+              onClick={onUnLockIssue}
+            >
               Unlock Issue
             </Button>
           )}
-          <Button variant='link' leftIcon={<EditIcon />} onClick={onEditIssue}>
+          <Button
+            fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+            variant='link'
+            leftIcon={<EditIcon />}
+            onClick={onEditIssue}
+          >
             Edit Issue
           </Button>
-          <Button variant='link' leftIcon={<DeleteIcon />} onClick={onDeleteIssue}>
+          <Button
+            fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+            variant='link'
+            leftIcon={<DeleteIcon />}
+            onClick={onDeleteIssue}
+          >
             Delete Issue
           </Button>
         </Box>

@@ -26,20 +26,24 @@ const TableHead: React.FC<IProps> = ({ issue, numberOfClosedIssue, numberOfOpene
           display='flex'
           flexDirection={{ sm: 'column', md: 'row' }}
           justifyContent='space-between'
-          alignItems='end'
+          alignItems={{ sm: 'baseline', md: 'end' }}
         >
           <Box display='flex' flexDirection='row' alignItems='center' marginLeft='5px'>
             <StarIcon />
             <Text marginLeft='5px'>
-              {issue.length > 1 ? `${issue.length} Issues` : `${issue.length} Issue`}
+              {issue.length > 1 ? `${issue.length} Issues,` : `${issue.length} Issue,`}
             </Text>
-            <Text marginLeft='5px'>{numberOfClosedIssue} Opened</Text>
-            <Text marginLeft='5px'>{numberOfOpenedIssue} Closed</Text>
+            <Text marginLeft='5px'>{numberOfClosedIssue} Opened,</Text>
+            <Text marginLeft='5px'>{numberOfOpenedIssue} Closed,</Text>
           </Box>
           <Box display='flex' flexDirection='row' marginTop={{ sm: '10px', md: '' }}>
             {tableHeadData.map((item: string) => {
               return (
-                <Text key={generateKey()} marginLeft='10px'>
+                <Text
+                  key={generateKey()}
+                  marginLeft='10px'
+                  fontSize={{ sm: 'text.extraSmall', md: 'text.small' }}
+                >
                   {item}
                 </Text>
               );
